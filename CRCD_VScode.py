@@ -9,7 +9,7 @@ from PIL import Image
 
 image = Image.open('MSCS_LOGO.png')
 
-st.image(image, width = 300)
+st.image(image, width = 300, use_column_width=True)
 
 # Simple Text
 st.header('Ministry of Coorperation - CRCS Portal')
