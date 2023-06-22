@@ -26,7 +26,7 @@ df = pd.read_csv('Final_CRCD_Govt.csv')
 @st.cache_data(experimental_allow_widgets=True)
 def stats():
     
-    st.write(df)
+    st.dataframe(df)
     def convert_df(df):
         # IMPORTANT: Cache the conversion to prevent computation on every rerun
         return df.to_csv().encode('utf-8')
@@ -44,11 +44,12 @@ def stats():
     #plot 1
     st.header('Different Types of Sectors')
     sector_counts = df['Sector Type'].value_counts()
-    fig4 = go.Figure(go.Treemap(labels=sector_counts.index, parents=['']*13, values=sector_counts.values))
-    fig4.update_layout(
+    fig1 = go.Figure(go.Treemap(labels=sector_counts.index, parents=['']*13, values=sector_counts.values))
+    fig1.update_layout(
         font = dict(size = 18)        
     )
-    st.write(fig4)
+    # st.write(fig1)
+    st.plotly_chart(fig1, use_container_width = True)
 
 
     st.divider() 
@@ -57,18 +58,21 @@ def stats():
 
     st.header('Total no. of Different Types of Sectors available')
     
-    fig = px.histogram(df, x="Sector Type", histfunc="count", text_auto=True, width=1000, height=800)
-    fig.update_layout(
+    fig2 = px.histogram(df, x="Sector Type", histfunc="count", text_auto=True, width=1000, height=800)
+    fig2.update_layout(
         font = dict(size = 18)   
     )
     
-    st.write(fig)
+    # st.write(fig2)
+    st.plotly_chart(fig2, use_container_width = True)
+    
 
     st.header('Percentage of Societies per Sector')
     sect_type = df['Sector Type'].value_counts()
-    fig2 = px.pie(labels=sect_type.index, values=sect_type.values, names=sect_type.index, color_discrete_sequence=px.colors.sequential.RdBu)
-    fig2.update_traces(textposition='inside', textfont_size=15, textinfo='percent')
-    st.write(fig2)
+    fig3 = px.pie(labels=sect_type.index, values=sect_type.values, names=sect_type.index, color_discrete_sequence=px.colors.sequential.RdBu)
+    fig3.update_traces(textposition='inside', textfont_size=15, textinfo='percent')
+    # st.write(fig2)
+    st.plotly_chart(fig3, use_container_width = True)
 
     st.markdown('There are about **:blue[52.5%]** of societies available for **:blue[Agro]**  Sector accross India and for sectors such as Dairy, Construction and Tourism have almost neglegible number of societies.')
     st.markdown('Other avaiable sectors are approx. **:blue[18%]** less then the most available sector Agro.')
@@ -77,8 +81,9 @@ def stats():
 
     #plot3
     st.header('No. of Societies per State')
-    fig3 = px.histogram(df, x="State", histfunc="count", text_auto=True, width=1000, height=800)
-    st.write(fig3)
+    fig4 = px.histogram(df, x="State", histfunc="count", text_auto=True, width=1000, height=800)
+    # st.write(fig4)
+    st.plotly_chart(fig4, use_container_width = True)
 
     m = df['State'].value_counts()
     st.markdown(f'Out of **:blue[{df.State.nunique()}]** States across India,  **:blue[{m.index[0]}]** has highest no. of societies. ')
@@ -126,7 +131,8 @@ def stats():
         color_continuous_midpoint=5,
     )
     fig5.update_geos(fitbounds="locations", visible=False)
-    st.write(fig5)
+    # st.write(fig5)
+    st.plotly_chart(fig5, use_container_width = True)
 
     st.markdown('Note: Only the states which are present in the dataset are included in the map.')
     
@@ -159,11 +165,12 @@ def state_filt():
     st.write(" ")
     st.header('Different Sectors available in your State')
     sector_counts = df[df['State'] == ch_state]['Sector Type'].value_counts()
-    fig8 = go.Figure(go.Treemap(labels=sector_counts.index, parents=['']*len_g, values=sector_counts.values))
-    fig8.update_layout(
+    fig6 = go.Figure(go.Treemap(labels=sector_counts.index, parents=['']*len_g, values=sector_counts.values))
+    fig6.update_layout(
         font = dict(size = 18)        
     )
-    st.write(fig8)
+    # st.write(fig6)
+    st.plotly_chart(fig6, use_container_width = True)
 
 
     agree = st.checkbox( f'Want to see the distribution of societies in **:blue[{option}]** ?')
@@ -172,15 +179,16 @@ def state_filt():
         st.subheader('No. of Sectors available in Different Districts')
         count_df = df.groupby([n['District'], n['Sector Type']]).size().reset_index(name='Count')
 
-        fig6 = go.Figure(data=[go.Bar(x=count_df['District'], y=count_df['Count'], text=count_df['Sector Type'], textposition='auto')])
-        fig6.update_layout(xaxis_title=ch_state,
+        fig7 = go.Figure(data=[go.Bar(x=count_df['District'], y=count_df['Count'], text=count_df['Sector Type'], textposition='auto')])
+        fig7.update_layout(xaxis_title=ch_state,
                         yaxis_title='COUNT',width=1000, height=800)
         
-        fig6.update_layout(
+        fig7.update_layout(
             font = dict(size = 18)        
         )
 
-        st.write(fig6)
+        # st.write(fig7)
+        st.plotly_chart(fig7, use_container_width = True)
 
 ###############################################
 
@@ -226,11 +234,12 @@ def sec_filt():
     st.write(" ")
     st.write(" ")
     st.subheader('Distribution of Different Sectors')
-    fig9 = px.histogram(df, x="Sector Type", histfunc="count", text_auto=True, width=1000, height=800)
-    fig9.update_layout(
+    fig8 = px.histogram(df, x="Sector Type", histfunc="count", text_auto=True, width=1000, height=800)
+    fig8.update_layout(
             font = dict(size = 18)        
         )
-    st.write(fig9)
+    # st.write(fig8)
+    st.plotly_chart(fig8, use_container_width = True)
 
     st.markdown('The **:blue[Agro]**  Sector is the most emerging sector across India.')
 
@@ -246,11 +255,12 @@ def sec_filt():
     if agree:
         st.write(' ')
         st.subheader(f'Distribution of {option6}')
-        fig7 = px.histogram(c, x="State", histfunc="count", text_auto=True, width=1000, height=800)
-        fig7.update_layout(
+        fig9 = px.histogram(c, x="State", histfunc="count", text_auto=True, width=1000, height=800)
+        fig9.update_layout(
             font = dict(size = 18)        
         )
-        st.write(fig7)
+        # st.write(fig9)
+        st.plotly_chart(fig9, use_container_width = True)
 
     st.write(' ')
     st.write(c)
